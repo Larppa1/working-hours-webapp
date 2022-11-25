@@ -1,0 +1,29 @@
+#landing {
+    display: flex;
+    flex-direction: row;
+    height: 80vh;
+}
+
+#landing > section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 33.33vw;
+    height: 100%;
+    padding-block: 5vh;
+}
+
+#landing > section > h2 {
+    margin-bottom: 2vh;
+}
+
+#landing > section:first-of-type > div {
+    background: grey;
+    width: 30vw;
+    padding-block: 2vh;
+}
+
+#landing > section:nth-of-type(2) {
+    max-height: 100%;
+    overflow-y: scroll;
+}

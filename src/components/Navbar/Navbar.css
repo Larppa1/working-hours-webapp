@@ -1,0 +1,12 @@
+#navbar {
+    background-color: #F5B700;
+    min-height: 10vh;
+    height: 10vh;
+    max-height: 10vh;
+}
+
+.dropdown {
+    margin-left: -0.75vw;
+    background-color: #FFCA2C;
+    border-radius: 1em;
+}

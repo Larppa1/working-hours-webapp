@@ -1,0 +1,46 @@
+{
+  "categories": [
+    "Koulu",
+    "Työ"
+  ],
+  "upcomingTasks": [
+    {
+      "id": 1,
+      "name": "Tee kotiläksyt",
+      "categoryList": [
+        "Koulu",
+        "Koti"
+      ],
+      "description": "Backend-kurssin tehtävät h1.",
+      "duration": 46000,
+      "finishDate": "24.11.2022",
+      "finishTime": "23:59:59"
+    },
+    {
+      "id": 2,
+      "name": "Test 1",
+      "categoryList": [
+        "Second"
+      ],
+      "description": "Test number one.",
+      "duration": 0,
+      "finishDate": "24.11.2022",
+      "finishTime": "23:59:59"
+    },
+    {
+      "id": 3,
+      "name": "Test 2",
+      "categoryList": [
+        "Third"
+      ],
+      "description": "Test number two.",
+      "duration": 0,
+      "finishDate": "24.11.2022",
+      "finishTime": "23:59:59"
+    }
+  ],
+  "archivedTasks": [],
+  "newTaskId": {
+    "id": 4
+  }
+}

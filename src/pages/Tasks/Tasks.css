@@ -1,0 +1,48 @@
+#tasks {
+    display: flex;
+    flex-direction: row;
+    min-height: 80vh;
+    height: 80vh;
+    max-height: 80vh;
+    position: relative;
+}
+
+.upcoming {
+    border-right: 1px solid black;
+}
+
+#tasks > label {
+    position: absolute;
+    top: 0.8em;
+    left: 0.8em;
+    padding: 0.8em;
+    border-radius: 0.5em;
+    background-color: white;
+    color: black;
+}
+
+#tasks > section > div:first-of-type {
+    margin-top: 5vh;
+}
+
+#tasks > section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-block: 2vh;
+    min-width: 50%;
+    width: 50%;
+    max-width: 50%;
+    max-height: 100%;
+    overflow-y: scroll;
+}
+
+#tasks > * h2 {
+    color: black;
+    font-size: 1.5em;
+    font-weight: 100;
+}
+
+.modal-box > p {
+    color: black;
+}

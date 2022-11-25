@@ -1,0 +1,64 @@
+#task {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 80%;
+    width: 80%;
+    max-width: 80%;
+    padding: 0.5em;
+    margin-block: 2vh;
+    background-color: white;
+    border-radius: 1em;
+}
+
+#task > section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-block: 1vh;
+}
+
+#task > section > p, h3, h4, h5, h6 {
+    color: black;
+}
+
+#task > section >  p {
+    font-size: 1.1em;
+}
+
+#task > section >  h3 {
+    font-size: 1.3em;
+    font-weight: 600;
+}
+
+#task > section >  h4 {
+    font-style: italic;
+    font-weight: 100;
+    cursor: pointer;
+}
+
+#task > section > h5 {
+    cursor: pointer;
+}
+
+#task > section > h4 {
+    font-size: 0.9em;
+}
+
+#task > section > span {
+    display: flex;
+    flex-direction: row;
+}
+
+#task > section > span > h6 {
+    font-size: 0.9em;
+}
+
+.counterActive {
+    color: green;
+}
+
+.counterNotActive {
+    color: red;
+}
