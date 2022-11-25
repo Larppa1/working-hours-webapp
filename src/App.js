@@ -7,8 +7,14 @@ import Statistics from './pages/Statistics/Statistics'
 import Tasks from './pages/Tasks/Tasks'
 import Navbar from './components/Navbar/Navbar'
 import  BottomNavbar from './components/BottomNavbar/BottomNavbar'
+import { useEffect } from 'react'
 
 export default function App() {
+    useEffect(() => {
+        document.body.className = localStorage.getItem('theme')
+        console.log(localStorage.getItem('theme'))
+    }, [])
+
   return(
     <Router>
       <header>

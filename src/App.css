@@ -18,9 +18,32 @@ body {
 
 main {
   min-height: 80vh;
-  background-color: whitesmoke;
 }
 
 .no-scrollbar::-webkit-scrollbar {
   display: none;
+}
+
+.dark {
+  background-color: #333;
+}
+
+.dark > * #navbar {
+  background-color: #d49f00;
+}
+
+.dark > * #bottomNavbar {
+  background-color: #d49f00;
+}
+
+.light {
+  background-color: whitesmoke;
+}
+
+.light > * #navbar {
+  background-color: #F5B700;
+}
+
+.light > * #bottomNavbar {
+  background-color: #F5B700;
 }

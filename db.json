@@ -12,9 +12,9 @@
         "Koti"
       ],
       "description": "Backend-kurssin tehtävät h1.",
-      "duration": 46000,
-      "finishDate": "24.11.2022",
-      "finishTime": "23:59:59"
+      "duration": 3615000,
+      "finishDate": "25.11.2022",
+      "finishTime": "22:00:00"
     },
     {
       "id": 2,
@@ -23,7 +23,7 @@
         "Second"
       ],
       "description": "Test number one.",
-      "duration": 0,
+      "duration": 5000,
       "finishDate": "24.11.2022",
       "finishTime": "23:59:59"
     },

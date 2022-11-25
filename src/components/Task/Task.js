@@ -35,6 +35,36 @@ export default function Task(props) {
             })
             }, 2000)
         })
+
+        //Listen to task finish date changes and patch new name to json-server
+        document.getElementById(`taskFinishDate${props.id}`).addEventListener('input', () => {
+            setTimeout(() => {
+                fetch(`http://127.0.0.1:3010/upcomingTasks/${props.id}`, {
+                method: 'PATCH',
+                body: JSON.stringify({
+                    finishDate: document.getElementById(`taskFinishDate${props.id}`).innerHTML,
+                }),
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                },
+            })
+            }, 2000)
+        })
+
+        //Listen to task finish time changes and patch new name to json-server
+        document.getElementById(`taskFinishTime${props.id}`).addEventListener('input', () => {
+            setTimeout(() => {
+                fetch(`http://127.0.0.1:3010/upcomingTasks/${props.id}`, {
+                method: 'PATCH',
+                body: JSON.stringify({
+                    finishTime: document.getElementById(`taskFinishTime${props.id}`).innerHTML,
+                }),
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                },
+            })
+            }, 2000)
+        })
     }, [])
 
     useEffect(() => {
@@ -76,10 +106,11 @@ export default function Task(props) {
                 <p id={'taskDescription' + props.id} contentEditable="true" suppressContentEditableWarning="true" spellCheck="false">{props.description}</p>
             </section>
             <section>
-                <h5 id='taskDurationCounter' className={isTaskActive ? 'counterActive' : 'counterNotActive'} onClick={() => {isTaskActive ? patchDurationValue() : setIsTaskActive(true)}}>{Math.floor((duration / (1000 * 60 * 60)) % 24)}h {Math.floor(duration / 60000)}min {((duration % 60000) / 1000).toFixed(0)}s</h5>
+                <h5 id='taskDurationCounter' className={isTaskActive ? 'counterActive' : 'counterNotActive'} onClick={() => {isTaskActive ? patchDurationValue() : setIsTaskActive(true)}}>{Math.floor((duration / (1000 * 60 * 60)) % 24)}h {Math.floor((duration / (1000 * 60)) % 60).toFixed(0)}min {((duration % 60000) / 1000).toFixed(0)}s</h5>
                 <span>
-                    <h6 id='taskFinishDate'>{props.finishDate}</h6>
-                    <h6 id='taskFinishTime'>&nbsp;klo {props.finishTime}</h6>
+                    <h6 id={'taskFinishDate' + props.id} contentEditable="true" suppressContentEditableWarning="true" spellCheck="false">{props.finishDate}</h6>
+                    <h6>&nbsp;klo&nbsp;</h6>
+                    <h6 id={'taskFinishTime' + props.id} contentEditable="true" suppressContentEditableWarning="true" spellCheck="false">{props.finishTime}</h6>
                 </span>
             </section>
         </div>

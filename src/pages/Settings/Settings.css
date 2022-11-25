@@ -1,0 +1,8 @@
+#changeThemeBtn {
+    color: black;
+    background-color: white;
+    margin: 1em;
+    padding: 0.5em;
+    border-radius: 1em;
+    border: 1px solid black;
+}
