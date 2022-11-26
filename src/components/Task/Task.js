@@ -71,7 +71,7 @@ export default function Task(props) {
         let interval = null;
 
         isTaskActive
-            ? interval = setInterval(() => {
+            ? setInterval(() => {
                 setDuration((duration) => duration + 1000);
             }, 1000)
             : clearInterval(interval)
@@ -79,6 +79,13 @@ export default function Task(props) {
             clearInterval(interval);
         }
     }, [isTaskActive])
+
+    window.onbeforeunload = () => {
+        isTaskActive
+            ? localStorage.setItem(`task${props.id}`, true)
+            : localStorage.setItem(`task${props.id}`, false)
+        //TODO: Make setItem value an object, give it a boolean to represent if task is active and a string to represent window closing time (new Date())
+    }
 
     //Patch updated task duration value to json-server
     const patchDurationValue = () => {
