@@ -12,6 +12,9 @@ export default function Task(props) {
     const [categoryList, setCategoryList] = useState([])
 
     useEffect(() => {
+        localStorage.getItem(`task${props.id}windowCloseTime`) !== null
+            ? setIsTaskActive(true)
+            : setIsTaskActive(false)
         getCategories()
         getDuration()
 
@@ -119,25 +122,24 @@ export default function Task(props) {
         }
     }, [isTaskActive, props.id])
 
-    /* //Patch new task duration to localStorage
+    //Patch new task duration to localStorage
     window.onbeforeunload = () => {
         isTaskActive
             ? localStorage.setItem(`task${props.id}windowCloseTime`, new Date())
             : localStorage.removeItem(`task${props.id}windowCloseTime`)
-        
-        console.log(localStorage.getItem(`task${props.id}windowCloseTime`))
-    } */
+    }
 
+    // Empty variable, used to save clicked category index
     let tempVar = null
 
     // Category list controller
     const openCategoryList = index => {
         //IF categoryList display type is none, set display type to flex.
         //ELSE set display type to none.
-        document.getElementById('categoryList').style.display === 'none'
+        document.getElementById('categoryList').style.display !== 'flex'
             ? document.getElementById('categoryList').style.display = 'flex'
             : document.getElementById('categoryList').style.display = 'none'
-        
+
         //Clicked category name y position minus offset.
         const posY = document.getElementById(`taskCategory${index}`).getBoundingClientRect().y * 0.79
 
@@ -152,11 +154,11 @@ export default function Task(props) {
     const getCategories = async () => {
         let tempList = []
 
-        const res = await fetch('http://127.0.0.1:3010/categories')
+        const res = await fetch('http://127.0.0.1:3010/categories/0')
         const data = await res.json()
         
-        for(let i = 0; i < data.length; i++) {
-            tempList[i] = data[i]
+        for(let i = 0; i < data.categoryList.length; i++) {
+            tempList[i] = data.categoryList[i]
         }
 
         setCategoryList(tempList)
@@ -189,6 +191,67 @@ export default function Task(props) {
         tempVar = null
     }
 
+    //Add new category to global category list in json-server
+    const addCategory = async (e) => {
+        if(e.keyCode !== 13) return
+
+        //Set clicked task category value to new category value
+        document.getElementById(`taskCategory${tempVar}`).innerText = document.getElementById('newCategory').value
+
+        //Fetch global category list
+        const res = await fetch(`http://127.0.0.1:3010/categories/0`)
+        const data = await res.json()
+
+        //Temp list -> global category list plus new category
+        let tempList = []
+        for(let i = 0; i < data.categoryList.length; i++) {
+            tempList[i] = data.categoryList[i]
+        }
+        tempList[data.categoryList.length] = document.getElementById('newCategory').value
+        
+        //Patch temp category list containing new category to global category list in json-server
+        await fetch(`http://127.0.0.1:3010/categories/0`, {
+            method: 'PATCH',
+            body: JSON.stringify({
+                categoryList: tempList,
+            }),
+            headers: {
+                'Content-Type': 'application/json; charset=UTF-8',
+            },
+        })
+
+        //Get updated category list
+        getCategories()
+
+        //Fetch task category list
+        const res2 = await fetch(`http://127.0.0.1:3010/upcomingTasks/${props.id}/`)
+        const data2 = await res2.json()
+
+        //Second temp list -> task category list plus new category
+        let tempList2 = []
+        for(let i = 0; i < data2.categoryList.length; i++) {
+            i !== tempVar
+                ? tempList2[i] = data2.categoryList[i]
+                : tempList2[i] = document.getElementById('newCategory').value
+        }
+
+        //Patch second temp list containing new category to task category list in json-server
+        await fetch(`http://127.0.0.1:3010/upcomingTasks/${props.id}`, {
+            method: 'PATCH',
+            body: JSON.stringify({
+                categoryList: tempList2,
+            }),
+            headers: {
+                'Content-Type': 'application/json; charset=UTF-8',
+            },
+        })
+
+        tempVar = null
+
+        document.getElementById('categoryList').style.display = 'none'
+        document.getElementById('newCategory').value = ''
+    }
+
     return(
         <div id='task'>
             <section>
@@ -198,8 +261,9 @@ export default function Task(props) {
                 }
                 <ul id='categoryList'>
                     {
-                        categoryList.map((res, index) => <li id={`categoryListItem${index}`} key={index} onClick={() => {changeCategory(index)}}>{res.name}</li>)
+                        categoryList.map((res, index) => <li id={`categoryListItem${index}`} key={index} onClick={() => {changeCategory(index)}}>{res}</li>)
                     }
+                    <input id='newCategory' placeholder='New category' autoComplete='off' onKeyUp={(e) => {addCategory(e)}} />
                 </ul>
             </section>
             <section>

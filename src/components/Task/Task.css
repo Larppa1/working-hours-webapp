@@ -66,14 +66,14 @@
 #categoryList {
     display: none;
     background-color: whitesmoke;
-    padding: 0.2em;
+    padding: 0.5em;
     position: absolute;
-    width: 10vw;
+    width: 20vw;
     flex-direction: column;
-    align-items: center;
     border-radius: 0.5em;
 }
 
 #categoryList > li {
     color: black;
+    cursor: pointer;
 }

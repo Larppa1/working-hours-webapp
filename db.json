@@ -1,10 +1,14 @@
 {
   "categories": [
     {
-      "name": "Koulu"
-    },
-    {
-      "name": "Työ"
+      "id": 0,
+      "categoryList": [
+        "Koti",
+        "Työ",
+        "Koulu",
+        "Backend",
+        "Testi"
+      ]
     }
   ],
   "upcomingTasks": [
@@ -12,13 +16,13 @@
       "id": 1,
       "name": "Tee kotiläksyt",
       "categoryList": [
-        "Koulu",
-        "Työ"
+        "Työ",
+        "Koulu"
       ],
       "description": "Backend-kurssin tehtävät.",
-      "duration": 77931,
-      "finishDate": "25.11.2022",
-      "finishTime": "22:00:00"
+      "duration": 13654,
+      "finishDate": "30.11.2022",
+      "finishTime": "23:00:00"
     },
     {
       "id": 2,
@@ -27,7 +31,7 @@
         "Second"
       ],
       "description": "Test number one.",
-      "duration": 74943,
+      "duration": 166009,
       "finishDate": "24.11.2022",
       "finishTime": "23:59:59"
     },
