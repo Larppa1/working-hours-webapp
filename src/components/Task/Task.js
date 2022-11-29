@@ -1,9 +1,19 @@
 import { useEffect, useState } from 'react'
+import { getDuration } from '../../methods/getDuration'
+import { taskDetailsListener } from '../../methods/taskDetailsListener'
+import { getCategories } from '../../methods/getCategories'
 import './Task.css'
+import { updateDuration } from '../../methods/updateDuration'
+import { openCategoryList } from '../../methods/openCategoryList'
+import { changeCategory } from '../../methods/changeCategory'
+import { addGlobalCategory } from '../../methods/addGlobalCategory'
+import { addTaskCategory } from '../../methods/addTaskCategory'
 
 export default function Task(props) {
     //Check if task is currently active
-    const [isTaskActive, setIsTaskActive] = useState(Boolean(localStorage.getItem(`task${props.id}active`)))
+    const [isTaskActive, setIsTaskActive] = useState(localStorage.getItem(`task${props.id}windowCloseTime`) !== null
+                                                        ? true
+                                                        : false)
 
     //Current task duration
     const [duration, setDuration] = useState(Number(props.duration))
@@ -11,94 +21,20 @@ export default function Task(props) {
     //List of saved categories
     const [categoryList, setCategoryList] = useState([])
 
+    const [tempVar, setTempVar] = useState()
+
     useEffect(() => {
-        localStorage.getItem(`task${props.id}windowCloseTime`) !== null
-            ? setIsTaskActive(true)
-            : setIsTaskActive(false)
-        getCategories()
-        getDuration()
-
-        //Listen to task name changes and patch new name to json-server
-        document.getElementById(`taskName${props.id}`).addEventListener('input', () => {
-            setTimeout(() => {
-                fetch(`http://127.0.0.1:3010/upcomingTasks/${props.id}`, {
-                    method: 'PATCH',
-                    body: JSON.stringify({
-                        name: document.getElementById(`taskName${props.id}`).innerHTML,
-                    }),
-                    headers: {
-                        'Content-Type': 'application/json; charset=UTF-8',
-                    },
-                })
-            }, 2000)
-        })
-        
-        //Listen to task description changes and patch new task description to json-server
-        document.getElementById(`taskDescription${props.id}`).addEventListener('input', () => {
-            setTimeout(() => {
-                fetch(`http://127.0.0.1:3010/upcomingTasks/${props.id}`, {
-                method: 'PATCH',
-                body: JSON.stringify({
-                    description: document.getElementById(`taskDescription${props.id}`).innerHTML,
-                }),
-                headers: {
-                    'Content-Type': 'application/json; charset=UTF-8',
-                },
-            })
-            }, 2000)
-        })
-
-        //Listen to task finish date changes and patch new finish date to json-server
-        document.getElementById(`taskFinishDate${props.id}`).addEventListener('input', () => {
-            setTimeout(() => {
-                fetch(`http://127.0.0.1:3010/upcomingTasks/${props.id}`, {
-                method: 'PATCH',
-                body: JSON.stringify({
-                    finishDate: document.getElementById(`taskFinishDate${props.id}`).innerHTML,
-                }),
-                headers: {
-                    'Content-Type': 'application/json; charset=UTF-8',
-                },
-            })
-            }, 2000)
-        })
-
-        //Listen to task finish time changes and patch new finish time to json-server
-        document.getElementById(`taskFinishTime${props.id}`).addEventListener('input', () => {
-            setTimeout(() => {
-                fetch(`http://127.0.0.1:3010/upcomingTasks/${props.id}`, {
-                method: 'PATCH',
-                body: JSON.stringify({
-                    finishTime: document.getElementById(`taskFinishTime${props.id}`).innerHTML,
-                }),
-                headers: {
-                    'Content-Type': 'application/json; charset=UTF-8',
-                },
-            })
-            }, 2000)
-        })
+        (async () => {
+            setDuration(await getDuration(props.id))
+            setCategoryList(await getCategories())
+            taskDetailsListener(props.id)
+        })()
     }, [])
-
-    //Get current duration from json-server on open
-    const getDuration = async () => {
-        const res = await fetch(`http://127.0.0.1:3010/upcomingTasks/${props.id}`)
-        const data = await res.json()
-        setDuration(data.duration)
-    }
 
     //Patch duration state to json-server when duration state changes
     useEffect(() => {
-        fetch(`http://127.0.0.1:3010/upcomingTasks/${props.id}`, {
-            method: 'PATCH',
-            body: JSON.stringify({
-                duration: duration,
-            }),
-            headers: {
-                'Content-Type': 'application/json; charset=UTF-8',
-            },
-        })
+        updateDuration(props.id, duration)
     }, [duration, props.id])
-
 
     // Timer logic
     useEffect(() => {
@@ -129,124 +65,19 @@ export default function Task(props) {
             : localStorage.removeItem(`task${props.id}windowCloseTime`)
     }
 
-    // Empty variable, used to save clicked category index
-    let tempVar = null
-
-    // Category list controller
-    const openCategoryList = index => {
-        //IF categoryList display type is none, set display type to flex.
-        //ELSE set display type to none.
-        document.getElementById('categoryList').style.display !== 'flex'
-            ? document.getElementById('categoryList').style.display = 'flex'
-            : document.getElementById('categoryList').style.display = 'none'
-
-        //Clicked category name y position minus offset.
-        const posY = document.getElementById(`taskCategory${index}`).getBoundingClientRect().y * 0.79
-
-        //Set categoryList top value to posY.
-        document.getElementById('categoryList').style.top = `${posY}px`
-
-        //Set tempVar to index argument.
-        tempVar = index
-    }
-
-    //Get all saved categories from json-server
-    const getCategories = async () => {
-        let tempList = []
-
-        const res = await fetch('http://127.0.0.1:3010/categories/0')
-        const data = await res.json()
-        
-        for(let i = 0; i < data.categoryList.length; i++) {
-            tempList[i] = data.categoryList[i]
-        }
-
-        setCategoryList(tempList)
-    }
-
-    const changeCategory = async (index) => {
-        document.getElementById(`taskCategory${tempVar}`).innerHTML = document.getElementById(`categoryListItem${index}`).innerText
-        document.getElementById('categoryList').style.display = 'none'
-
-        const res = await fetch(`http://127.0.0.1:3010/upcomingTasks/${props.id}/`)
-        const data = await res.json()
-
-        let tempList = []
-        for(let i = 0; i < data.categoryList.length; i++) {
-            i !== tempVar
-                ? tempList[i] = data.categoryList[i]
-                : tempList[i] = document.getElementById(`categoryListItem${index}`).innerText
-        }
-
-        fetch(`http://127.0.0.1:3010/upcomingTasks/${props.id}`, {
-            method: 'PATCH',
-            body: JSON.stringify({
-                categoryList: tempList,
-            }),
-            headers: {
-                'Content-Type': 'application/json; charset=UTF-8',
-            },
-        })
-
-        tempVar = null
-    }
-
-    //Add new category to global category list in json-server
     const addCategory = async (e) => {
         if(e.keyCode !== 13) return
 
-        //Set clicked task category value to new category value
-        document.getElementById(`taskCategory${tempVar}`).innerText = document.getElementById('newCategory').value
-
-        //Fetch global category list
-        const res = await fetch(`http://127.0.0.1:3010/categories/0`)
-        const data = await res.json()
-
-        //Temp list -> global category list plus new category
-        let tempList = []
-        for(let i = 0; i < data.categoryList.length; i++) {
-            tempList[i] = data.categoryList[i]
-        }
-        tempList[data.categoryList.length] = document.getElementById('newCategory').value
-        
-        //Patch temp category list containing new category to global category list in json-server
-        await fetch(`http://127.0.0.1:3010/categories/0`, {
-            method: 'PATCH',
-            body: JSON.stringify({
-                categoryList: tempList,
-            }),
-            headers: {
-                'Content-Type': 'application/json; charset=UTF-8',
-            },
-        })
+        //Add new category to global category list
+        await addGlobalCategory(tempVar)
 
         //Get updated category list
-        getCategories()
+        setCategoryList(await getCategories())
 
-        //Fetch task category list
-        const res2 = await fetch(`http://127.0.0.1:3010/upcomingTasks/${props.id}/`)
-        const data2 = await res2.json()
+        //Add new category to task category list
+        await addTaskCategory(props.id, tempVar)
 
-        //Second temp list -> task category list plus new category
-        let tempList2 = []
-        for(let i = 0; i < data2.categoryList.length; i++) {
-            i !== tempVar
-                ? tempList2[i] = data2.categoryList[i]
-                : tempList2[i] = document.getElementById('newCategory').value
-        }
-
-        //Patch second temp list containing new category to task category list in json-server
-        await fetch(`http://127.0.0.1:3010/upcomingTasks/${props.id}`, {
-            method: 'PATCH',
-            body: JSON.stringify({
-                categoryList: tempList2,
-            }),
-            headers: {
-                'Content-Type': 'application/json; charset=UTF-8',
-            },
-        })
-
-        tempVar = null
+        setTempVar(null)
 
         document.getElementById('categoryList').style.display = 'none'
         document.getElementById('newCategory').value = ''
@@ -257,11 +88,11 @@ export default function Task(props) {
             <section>
                 <h3 id={'taskName' + props.id} contentEditable="true" suppressContentEditableWarning="true" spellCheck="false">{props.name}</h3>
                 {
-                    props.categoryList.map((res, index) => <h4 id={`taskCategory${index}`} onClick={() => {openCategoryList(index)}} key={index}>{res}</h4>)
+                    props.categoryList.map((res, index) => <h4 id={`taskCategory${index}`} onClick={(e) => {setTempVar(openCategoryList(index, e))}} key={index}>{res}</h4>)
                 }
                 <ul id='categoryList'>
                     {
-                        categoryList.map((res, index) => <li id={`categoryListItem${index}`} key={index} onClick={() => {changeCategory(index)}}>{res}</li>)
+                        categoryList.map((res, index) => <li id={`categoryListItem${index}`} key={index} onClick={() => {setTempVar(changeCategory(index, tempVar, props.id))}}>{res}</li>)
                     }
                     <input id='newCategory' placeholder='New category' autoComplete='off' onKeyUp={(e) => {addCategory(e)}} />
                 </ul>
