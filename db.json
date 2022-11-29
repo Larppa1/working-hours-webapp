@@ -23,7 +23,7 @@
         "Backend"
       ],
       "description": "Backend-kurssin tehtävät.",
-      "duration": 54951,
+      "duration": 32585,
       "finishDate": "30.11.2022",
       "finishTime": "23:59:00"
     },
@@ -48,10 +48,19 @@
       "duration": 0,
       "finishDate": "24.11.2022",
       "finishTime": "23:59:59"
+    },
+    {
+      "id": 4,
+      "name": "Kotityöt",
+      "categoryList": [],
+      "description": "Tiskikoneen tyhjennys",
+      "duration": 0,
+      "finishDate": "29.11.2022",
+      "finishTime": "20:00:00"
     }
   ],
   "archivedTasks": [],
   "newTaskId": {
-    "id": 4
+    "id": 5
   }
 }

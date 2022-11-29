@@ -13,7 +13,8 @@ export default function Task(props) {
     //Check if task is currently active
     const [isTaskActive, setIsTaskActive] = useState(localStorage.getItem(`task${props.id}windowCloseTime`) !== null
                                                         ? true
-                                                        : false)
+                                                        : false
+                                                    )
 
     //Current task duration
     const [duration, setDuration] = useState(Number(props.duration))
@@ -90,6 +91,8 @@ export default function Task(props) {
                 {
                     props.categoryList.map((res, index) => <h4 id={`taskCategory${index}`} onClick={(e) => {setTempVar(openCategoryList(index, e))}} key={index}>{res}</h4>)
                 }
+                {/* TODO: Option to add new category */}
+                {/* <h4 id={`taskCategory${categoryList.length}`} onClick={(e) => {setTempVar(openCategoryList(categoryList.length, e))}} >Add new category</h4> */}
                 <ul id='categoryList'>
                     {
                         categoryList.map((res, index) => <li id={`categoryListItem${index}`} key={index} onClick={() => {setTempVar(changeCategory(index, tempVar, props.id))}}>{res}</li>)

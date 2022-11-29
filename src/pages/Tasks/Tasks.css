@@ -46,3 +46,7 @@
 .modal-box > p {
     color: black;
 }
+
+.modal-box > input {
+    margin-block: 1vh;
+}

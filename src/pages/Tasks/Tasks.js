@@ -1,6 +1,7 @@
 import './Tasks.css'
 import { useEffect, useState } from 'react'
 import Task from '../../components/Task/Task'
+import { getTasks } from '../../methods/getTasks'
 
 export default function Tasks() {
     //State for list of upcoming tasks
@@ -10,25 +11,10 @@ export default function Tasks() {
     let newId = null
 
     useEffect(() => {
-        getTasks()
+        (async () => {
+            setUpcomingTaskList(await getTasks())
+        })()
     }, [])
-
-    const getTasks = async () => {
-        //Create temp array for fetched data
-        let tempList = []
-
-        //Get upcoming tasks data
-        const response = await fetch('http://127.0.0.1:3010/upcomingTasks')
-        const result = await response.json()
-
-        //Set fetched data to temp array
-        for(let i = 0; i < result.length; i++) {
-            tempList[i] = result[i]
-        }
-
-        //Set upcomingTaskList state to temp array
-        setUpcomingTaskList(tempList)
-    }
 
     const addTask = async () => {
         //Get auto-incrementing id for new task
@@ -42,11 +28,12 @@ export default function Tasks() {
             method: 'POST',
             body: JSON.stringify({
                 id: newId,
-                name: "Test",
-                category: "Second",
-                description: "Test task.",
-                finishDate: "24.11.2022",
-                finishTime: "23:59:59"
+                name: document.getElementById('taskName').value,
+                categoryList: [],
+                description: document.getElementById('taskDescription').value,
+                duration: 0,
+                finishDate: document.getElementById('taskFinishDate').value,
+                finishTime: document.getElementById('taskFinishTime').value,
             }),
             headers: {
                 'Accept': 'application/json',
@@ -70,7 +57,7 @@ export default function Tasks() {
 
         //Set local variable newId to null and call getTasks method
         newId = null
-        getTasks()
+        setUpcomingTaskList(await getTasks())
     }
 
     return(
@@ -80,7 +67,11 @@ export default function Tasks() {
             <div className="modal">
                 <div className="modal-box">
                     <h3 className="font-bold text-lg">Add new task</h3>
-                    <p className="py-4">You've been selected for a chance to get one year of subscription to use Wikipedia for free!</p>
+                    <input id='taskName' className="input input-bordered w-full max-w-xs" placeholder='Name' autoComplete='off' />
+                    {/* TODO: Add category selection */}
+                    <input id='taskDescription' className="input input-bordered w-full max-w-xs" placeholder='Description' autoComplete='off' />
+                    <input id='taskFinishDate' className="input input-bordered w-full max-w-xs" placeholder='Finish date' autoComplete='off' />
+                    <input id='taskFinishTime' className="input input-bordered w-full max-w-xs" placeholder='Finish time' autoComplete='off' />
                     <div className="modal-action">
                         <label htmlFor="my-modal" className="btn" onClick={addTask}>Add</label>
                     </div>
