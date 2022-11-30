@@ -17,24 +17,35 @@ export default function Task(props) {
                                                     )
 
     //Current task duration
-    const [duration, setDuration] = useState(Number(props.duration))
+    const [duration, setDuration] = useState(props.duration)
 
     //List of saved categories
     const [categoryList, setCategoryList] = useState([])
+
+    const [taskCategoryList, setTaskCategoryList] = useState([])
 
     const [tempVar, setTempVar] = useState()
 
     useEffect(() => {
         (async () => {
+            const res = await fetch(`http://127.0.0.1:3010/upcomingTasks/${props.id}`)
+            const data = await res.json()
+            setTaskCategoryList(data.categoryList)
+
             setDuration(await getDuration(props.id))
             setCategoryList(await getCategories())
             taskDetailsListener(props.id)
+            
         })()
     }, [])
 
     //Patch duration state to json-server when duration state changes
     useEffect(() => {
-        updateDuration(props.id, duration)
+        setTimeout(() => {
+            (async () => {
+                await updateDuration(props.id, duration)
+            })()
+        }, 2000)
     }, [duration, props.id])
 
     // Timer logic
@@ -84,18 +95,25 @@ export default function Task(props) {
         document.getElementById('newCategory').value = ''
     }
 
+    const changeTaskCategory = async (index) => {
+        await changeCategory(index, tempVar, props.id)
+        const res = await fetch(`http://127.0.0.1:3010/upcomingTasks/${props.id}`)
+        const data = await res.json()
+
+        setTaskCategoryList(data.categoryList)
+        setTempVar(null)
+    }
+
     return(
         <div id='task'>
             <section>
                 <h3 id={'taskName' + props.id} contentEditable="true" suppressContentEditableWarning="true" spellCheck="false">{props.name}</h3>
                 {
-                    props.categoryList.map((res, index) => <h4 id={`taskCategory${index}`} onClick={(e) => {setTempVar(openCategoryList(index, e))}} key={index}>{res}</h4>)
+                    taskCategoryList.map((res, index) => <h4 id={`taskCategory${index}`} onClick={(e) => {setTempVar(openCategoryList(index, e))}} key={index}>{res}</h4>)
                 }
-                {/* TODO: Option to add new category */}
-                {/* <h4 id={`taskCategory${categoryList.length}`} onClick={(e) => {setTempVar(openCategoryList(categoryList.length, e))}} >Add new category</h4> */}
                 <ul id='categoryList'>
                     {
-                        categoryList.map((res, index) => <li id={`categoryListItem${index}`} key={index} onClick={() => {setTempVar(changeCategory(index, tempVar, props.id))}}>{res}</li>)
+                        categoryList.map((res, index) => <li id={`categoryListItem${index}`} key={index} onClick={() => {changeTaskCategory(index)}}>{res}</li>)
                     }
                     <input id='newCategory' placeholder='New category' autoComplete='off' onKeyUp={(e) => {addCategory(e)}} />
                 </ul>

@@ -5,14 +5,11 @@ export const changeCategory = async (index, tempVar, id) => {
     const res = await fetch(`http://127.0.0.1:3010/upcomingTasks/${id}/`)
     const data = await res.json()
 
-    let tempList = []
-    for(let i = 0; i < data.categoryList.length; i++) {
-        i !== tempVar
-            ? tempList[i] = data.categoryList[i]
-            : tempList[i] = document.getElementById(`categoryListItem${index}`).innerText
-    }
+    let tempList = data.categoryList
+    tempList.splice(tempVar, 1, document.getElementById(`categoryListItem${index}`).innerText)
+    tempList.push('+')
 
-    fetch(`http://127.0.0.1:3010/upcomingTasks/${id}`, {
+    await fetch(`http://127.0.0.1:3010/upcomingTasks/${id}`, {
         method: 'PATCH',
         body: JSON.stringify({
             categoryList: tempList,
@@ -21,6 +18,4 @@ export const changeCategory = async (index, tempVar, id) => {
             'Content-Type': 'application/json; charset=UTF-8',
         },
     })
-
-    return null
 }

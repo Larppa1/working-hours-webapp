@@ -7,11 +7,8 @@ export const addGlobalCategory = async (tempVar) => {
     const data = await res.json()
 
     //Temp list -> global category list plus new category
-    let tempList = []
-    for(let i = 0; i < data.categoryList.length; i++) {
-        tempList[i] = data.categoryList[i]
-    }
-    tempList[data.categoryList.length] = document.getElementById('newCategory').value
+    let tempList = data.categoryList
+    tempList.push(document.getElementById('newCategory').value)
 
     //Patch temp category list containing new category to global category list in json-server
     await fetch(`http://127.0.0.1:3010/categories/0`, {

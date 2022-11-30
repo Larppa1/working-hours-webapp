@@ -28,7 +28,10 @@ export default function Navbar() {
                 <div className="flex-none">
                     <ul className="menu menu-horizontal p-0">
                     <li onClick={() => {setWindowCloseTime(location, upcomingTaskList)}}><Link to='/'>Dashboard</Link></li>
-                    <li onClick={() => {addTimeBetween(location, upcomingTaskList)}}><Link to='/tasks'>Tasks</Link></li>
+                    <li onClick={() => {(async () => {
+                        setUpcomingTaskList(await getTasks())
+                        await addTimeBetween(location, upcomingTaskList)
+                    })()}}><Link to='/tasks'>Tasks</Link></li>
                     <li onClick={() => {setWindowCloseTime(location, upcomingTaskList)}}><Link to='/statistics'>Statistics</Link></li>
                     <li tabIndex={0}>
                         <a>

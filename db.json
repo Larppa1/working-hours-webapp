@@ -9,8 +9,7 @@
         "Backend",
         "Testi",
         "Frontend",
-        "VC",
-        "Käytettävyys"
+        "VC"
       ]
     }
   ],
@@ -19,11 +18,13 @@
       "id": 1,
       "name": "Tee kotiläksyt",
       "categoryList": [
+        "Työ",
+        "Backend",
         "Koulu",
-        "Backend"
+        "+"
       ],
       "description": "Backend-kurssin tehtävät.",
-      "duration": 32585,
+      "duration": 146000,
       "finishDate": "30.11.2022",
       "finishTime": "23:59:00"
     },
@@ -34,7 +35,7 @@
         "Second"
       ],
       "description": "Test number one.",
-      "duration": 0,
+      "duration": 43000,
       "finishDate": "24.11.2022",
       "finishTime": "23:59:59"
     },

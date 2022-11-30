@@ -13,6 +13,7 @@ export default function Tasks() {
     useEffect(() => {
         (async () => {
             setUpcomingTaskList(await getTasks())
+            console.log(upcomingTaskList)
         })()
     }, [])
 
